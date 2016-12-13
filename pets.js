@@ -1,4 +1,7 @@
+#! /node
+
 /* eslint-disable no-console*/
+/* eslint-disable max-statements*/
 
 'use strict';
 
@@ -18,7 +21,7 @@ if (cmd === 'read') {
     const index = process.argv[3];
     const pets = JSON.parse(data);
 
-    if (index > pets.length || index < 0) {
+    if (index >= pets.length || index < 0) {
       console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
     }
     else if (index) {
@@ -69,13 +72,17 @@ else if (cmd === 'update') {
       throw updateErr;
     }
     const pets = JSON.parse(data);
-    const index = process.argv(3);
-    const age = process.argv(4);
-    const kind = process.argv(5);
-    const name = process.argv(6);
+    const index = process.argv[3];
+    const age = process.argv[4];
+    const kind = process.argv[5];
+    const name = process.argv[6];
 
-    if (index && age && kind && name) {
-      pets[index].age = age;
+    if (index >= pets.length || index < 0) {
+      console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
+      process.exit(1);
+    }
+    else if (index && age && kind && name) {
+      pets[index].age = parseInt(age);
       pets[index].kind = kind;
       pets[index].name = name;
     }
@@ -83,6 +90,46 @@ else if (cmd === 'update') {
       console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
       process.exit(1);
     }
+
+    const petsJSON = JSON.stringify(pets);
+
+    fs.writeFile(petsPath, petsJSON, (writeErr) => {
+      if (writeErr) {
+        throw writeErr;
+      }
+      console.log(pets[index]);
+    });
+  });
+}
+else if (cmd === 'destroy') {
+  fs.readFile(petsPath, 'utf8', (destroyErr, data) => {
+    if (destroyErr) {
+      throw destroyErr;
+    }
+
+    const pets = JSON.parse(data);
+    const index = process.argv[3];
+
+    if (index >= pets.length || index < 0) {
+      console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
+      process.exit(1);
+    }
+    else if (index) {
+      console.log(pets[index]);
+      pets.splice(index, 1);
+    }
+    else {
+      console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
+      process.exit(1);
+    }
+
+    const petsJSON = JSON.stringify(pets);
+
+    fs.writeFile(petsPath, petsJSON, (writeErr) => {
+      if (writeErr) {
+        throw writeErr;
+      }
+    });
   });
 }
 else {
