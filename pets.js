@@ -7,7 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const petsPath = (__dirname, 'pets.json');
+const petsPath = path.join(__dirname, 'pets.json');
 
 const node = path.basename(process.argv[0]);
 const file = path.basename(process.argv[1]);
@@ -18,11 +18,13 @@ if (cmd === 'read') {
     if (err) {
       throw err;
     }
+
     const index = process.argv[3];
     const pets = JSON.parse(data);
 
     if (index >= pets.length || index < 0) {
       console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
+      process.exit(1);
     }
     else if (index) {
       console.log(pets[index]);
