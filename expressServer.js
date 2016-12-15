@@ -11,16 +11,61 @@ const app = express();
 
 app.disable('x-powered-by');
 
+const morgan = require('morgan');
+
+app.use(morgan('short'));
+
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
 app.get('/pets', (req, res) => {
-  fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
-    if (err) {
-      console.error(err.stack);
+  fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
+    if (readErr) {
+      console.error(readErr.stack);
       res.sendStatus(500);
     }
 
     const pets = JSON.parse(petsJSON);
 
     res.send(pets);
+  });
+});
+
+app.post('/pets', (req, res) => {
+  fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
+    if (readErr) {
+      console.error(readErr.stack);
+      res.sendStatus(500);
+    }
+
+    const pets = JSON.parse(petsJSON);
+    const pet = {};
+    pet.age = req.body.age;
+    pet.kind = req.body.kind;
+    pet.name = req.body.name;
+
+    if (!pet || !pet.age || !pet.kind || !pet.name) {
+      return res.sendStatus(400);
+    }
+
+    if (!pet) {
+      return res.sendStatus(400);
+    }
+
+    pets.push(pet);
+
+    const newPetsJSON = JSON.stringify(pets);
+
+    fs.writeFile(petsPath, newPetsJSON, (writeErr) => {
+      if (writeErr) {
+        console.error(writeErr.stack);
+        res.sendStatus(500);
+      }
+
+      res.set('Content-Type', 'application/json');
+      res.send(pet);
+    });
   });
 });
 
