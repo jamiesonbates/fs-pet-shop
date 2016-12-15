@@ -19,6 +19,21 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
+// const auth = require('basic-auth');
+
+// auth.use('/pets', (req, res) => {
+//   const user = auth(req);
+//
+//   if (!user || user.name !== 'jamiesonbates' || user.pass !== 'hello') {
+//     res.statusCode(401);
+//     res.setHeader('WWW-Authenticate', 'Basic realm="example"');
+//     res.end('Access denied');
+//   }
+//   else {
+//     res.end('Access granted');
+//   }
+// });
+
 // Read All
 app.get('/pets', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
