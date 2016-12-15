@@ -124,50 +124,66 @@ describe('pets restfulExpressServer', () => {
   });
 
   describe('PATCH method', () => {
-    it('should update pets.json when given a valid pet object', (done) => {
-      request(app)
-        .patch('/pets/1')
-        .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
-        .send({
-          age: 2,
-          kind: 'owl',
-          name: 'Hugo'
-        })
-        .expect('Content-type', /json/)
-        .expect(200, {
-          age: 2,
-          kind: 'owl',
-          name: 'Hugo'
-        }, (err, _res) => {
-          if (err) {
-            return done(err);
-          }
+   it('should update pets.json when given a complete pet object', (done) => {
+     request(app)
+       .patch('/pets/1')
+       .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
+       .send({
+         age: 2,
+         kind: 'owl',
+         name: 'Hugo'
+       })
+       .expect('Content-type', /json/)
+       .expect(200, {
+         age: 2,
+         kind: 'owl',
+         name: 'Hugo'
+       }, (err, _res) => {
+         if (err) {
+           return done(err);
+         }
 
-          request(app)
-            .get('/pets/1')
-            .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
-            .expect('Content-Type', /json/)
-            .expect(200, {
-              age: 2,
-              kind: 'owl',
-              name: 'Hugo'
-            }, done);
-        });
-    });
-    it('should respond with a 400 status code for invalid data', (done) => {
-      request(app)
-        .patch('/pets/1')
-        .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
-        .send({
-          age: 'two',
-          kind: '',
-          name: ''
-        })
-        .expect('Content-type', /text\/plain/)
-        .expect(400, 'Bad Request', done);
+         request(app)
+           .get('/pets/1')
+           .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
+           .expect('Content-Type', /json/)
+           .expect(200, {
+             age: 2,
+             kind: 'owl',
+             name: 'Hugo'
+           }, done);
+       });
+   });
+
+   it('should update pets.json when given an incomplete pet object', (done) => {
+     request(app)
+       .patch('/pets/1')
+       .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
+       .send({
+         age: 3
+       })
+       .expect('Content-type', /json/)
+       .expect(200, {
+         age: 3,
+         kind: 'duck',
+         name: 'Bob'
+       }, (err, _res) => {
+         if (err) {
+           return done(err);
+         }
+
+         request(app)
+           .get('/pets/1')
+           .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
+           .expect('Content-Type', /json/)
+           .expect(200, {
+             age: 3,
+             kind: 'duck',
+             name: 'Bob'
+           }, done);
+      });
     });
   });
-
   describe('DELETE method', () => {
     it('should remove a pet from pets.json', (done) => {
       request(app)
