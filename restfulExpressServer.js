@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.get('/pets', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      next(readErr);
+      return next(readErr);
     }
 
     const pets = JSON.parse(petsJSON);
@@ -36,7 +36,7 @@ app.get('/pets', (req, res) => {
 app.post('/pets', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      next(readErr);
+      return next(readErr);
     }
 
     const pets = JSON.parse(petsJSON);
@@ -59,7 +59,7 @@ app.post('/pets', (req, res) => {
 
     fs.writeFile(petsPath, newPetsJSON, (writeErr) => {
       if (writeErr) {
-        next(writeErr);
+        return next(writeErr);
       }
 
       res.set('Content-Type', 'application/json');
@@ -72,7 +72,7 @@ app.post('/pets', (req, res) => {
 app.get('/pets/:id', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      next(readErr);
+      return next(readErr);
     }
 
     const id = Number.parseInt(req.params.id);
@@ -91,7 +91,7 @@ app.get('/pets/:id', (req, res) => {
 app.patch('/pets/:id', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      next(readErr);
+      return next(readErr);
     }
 
     const id = Number.parseInt(req.params.id);
@@ -125,7 +125,7 @@ app.patch('/pets/:id', (req, res) => {
 
     fs.writeFile(petsPath, newPetsJSON, (writeErr) => {
       if (writeErr) {
-        next(writeErr);
+        return next(writeErr);
       }
 
       res.set('Content-Type', 'application/json');
@@ -138,7 +138,7 @@ app.patch('/pets/:id', (req, res) => {
 app.delete('/pets/:id', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      next(readErr);
+      return next(readErr);
     }
 
     const pets = JSON.parse(petsJSON);
@@ -153,7 +153,7 @@ app.delete('/pets/:id', (req, res) => {
 
     fs.writeFile(petsPath, newPetsJSON, (writeErr) => {
       if (writeErr) {
-        next(writeErr);
+        return next(writeErr);
       }
 
       res.set('Content-Type', 'application/json');
