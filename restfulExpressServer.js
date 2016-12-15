@@ -23,8 +23,7 @@ app.use(bodyParser.json());
 app.get('/pets', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      console.error(readErr.stack);
-      res.sendStatus(500);
+      next(readErr);
     }
 
     const pets = JSON.parse(petsJSON);
@@ -37,8 +36,7 @@ app.get('/pets', (req, res) => {
 app.post('/pets', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      console.error(readErr.stack);
-      res.sendStatus(500);
+      next(readErr);
     }
 
     const pets = JSON.parse(petsJSON);
@@ -61,8 +59,7 @@ app.post('/pets', (req, res) => {
 
     fs.writeFile(petsPath, newPetsJSON, (writeErr) => {
       if (writeErr) {
-        console.error(writeErr.stack);
-        res.sendStatus(500);
+        next(writeErr);
       }
 
       res.set('Content-Type', 'application/json');
@@ -73,10 +70,9 @@ app.post('/pets', (req, res) => {
 
 // Read One
 app.get('/pets/:id', (req, res) => {
-  fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
-    if (err) {
-      console.error(err.stack);
-      res.sendStatus(500);
+  fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
+    if (readErr) {
+      next(readErr);
     }
 
     const id = Number.parseInt(req.params.id);
@@ -95,8 +91,7 @@ app.get('/pets/:id', (req, res) => {
 app.patch('/pets/:id', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      console.error(readErr.stack);
-      res.sendStatus(500);
+      next(readErr);
     }
 
     const id = Number.parseInt(req.params.id);
@@ -130,8 +125,7 @@ app.patch('/pets/:id', (req, res) => {
 
     fs.writeFile(petsPath, newPetsJSON, (writeErr) => {
       if (writeErr) {
-        console.error(writeErr.stack);
-        res.sendStatus(500);
+        next(writeErr);
       }
 
       res.set('Content-Type', 'application/json');
@@ -144,8 +138,7 @@ app.patch('/pets/:id', (req, res) => {
 app.delete('/pets/:id', (req, res) => {
   fs.readFile(petsPath, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      console.error(readErr.stack);
-      res.sendStatus(500);
+      next(readErr);
     }
 
     const pets = JSON.parse(petsJSON);
@@ -160,8 +153,7 @@ app.delete('/pets/:id', (req, res) => {
 
     fs.writeFile(petsPath, newPetsJSON, (writeErr) => {
       if (writeErr) {
-        console.error(writeErr.stack);
-        res.sendStatus(500);
+        next(writeErr);
       }
 
       res.set('Content-Type', 'application/json');
@@ -170,8 +162,18 @@ app.delete('/pets/:id', (req, res) => {
   });
 });
 
+// Test Error Handling for ISE (500)
+// app.get('/boom', (_req, _res, next) => {
+//   next(new Error('BOOM!'));
+// });
+
 app.use((req, res) => {
   res.sendStatus(404);
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.sendStatus(500);
 });
 
 const port = process.env.PORT || 8000;
