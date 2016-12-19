@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const petsPath = path.join(__dirname, '.../pets.json');
+const petsPath = path.join(__dirname, '../pets.json');
 
 const express = require('express');
 const router = express.Router();
