@@ -15,7 +15,9 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
-app.use('./router/pets');
+const pets = require('./router/pets');
+
+app.use(pets);
 
 app.use((req, res) => {
   res.sendStatus(404);
