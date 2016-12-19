@@ -21,16 +21,15 @@ app.use(bodyParser.json());
 
 // const auth = require('basic-auth');
 
-// auth.use('/pets', (req, res) => {
+// app.use((req, res, next) => {
 //   const user = auth(req);
 //
 //   if (!user || user.name !== 'jamiesonbates' || user.pass !== 'hello') {
-//     res.statusCode(401);
-//     res.setHeader('WWW-Authenticate', 'Basic realm="example"');
-//     res.end('Access denied');
+//     res.set('WWW-Authenticate', 'Basic realm="example"');
+//     res.sendStatus(401);
 //   }
 //   else {
-//     res.end('Access granted');
+//     return next();
 //   }
 // });
 
