@@ -36,10 +36,6 @@ app.listen(port, () => {
 
 module.exports = app;
 
-
-
-
-
 // const auth = require('basic-auth');
 
 // app.use((req, res, next) => {

@@ -31,6 +31,7 @@ router.post('/pets', (req, res) => {
 
     const pets = JSON.parse(petsJSON);
     const pet = {};
+    
     pet.age = req.body.age;
     pet.kind = req.body.kind;
     pet.name = req.body.name;
